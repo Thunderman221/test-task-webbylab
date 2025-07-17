@@ -3,6 +3,7 @@ import AddMovieModal from "../../components/AddMovieModal/AddMovieModal";
 import { addMovie } from "../../services/api";
 import MovieList from "../../components/MoviesList/MovieList";
 import SearchBar from "../../components/SearchBar/SearchBar";
+import s from "./Hompage.module.css";
 
 const HomePage = () => {
   const [searchInfo, setSearchInfo] = useState({
@@ -36,7 +37,6 @@ const HomePage = () => {
     try {
       await addMovie(newMovie);
       alert("Movie added successfully!");
-
       window.location.reload();
     } catch (error) {
       alert("Failed to add movie.");
@@ -45,57 +45,27 @@ const HomePage = () => {
   };
 
   return (
-    <div>
+    <div className={s.wrapper}>
       <SearchBar initialQuery="" onSearchResults={handleSearchResults} />
 
-      <button
-        onClick={() => setShowModal(true)}
-        style={{
-          marginTop: "10px",
-          padding: "8px 16px",
-          backgroundColor: "#28a745",
-          color: "white",
-          border: "none",
-          borderRadius: "6px",
-          cursor: "pointer",
-        }}
-      >
+      <button onClick={() => setShowModal(true)} className={s.addButton}>
         Add Movie
       </button>
 
       {searchInfo.isSearching && (
-        <div
-          style={{
-            padding: "10px",
-            backgroundColor: "#e7f3ff",
-            borderRadius: "8px",
-            margin: "20px 0",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
+        <div className={s.searchInfoBox}>
           <span>
             Search results for "{searchInfo.query}" by {searchInfo.searchType}:{" "}
             {searchInfo.resultsCount} movies found
           </span>
-          <button
-            onClick={handleClearSearch}
-            style={{
-              padding: "5px 10px",
-              backgroundColor: "#007bff",
-              color: "white",
-              border: "none",
-              borderRadius: "4px",
-              cursor: "pointer",
-            }}
-          >
+          <button onClick={handleClearSearch} className={s.clearButton}>
             Show All Movies
           </button>
         </div>
       )}
 
       <MovieList searchInfo={searchInfo} />
+
       {showModal && (
         <AddMovieModal
           onClose={() => setShowModal(false)}
