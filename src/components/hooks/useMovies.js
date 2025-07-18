@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetchMovies } from "../services/api";
+import { fetchMovies } from "../../services/api.js";
 
 export const useMovies = (
   currentPage,

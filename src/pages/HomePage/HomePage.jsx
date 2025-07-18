@@ -1,8 +1,9 @@
 import { useState } from "react";
 import AddMovieModal from "../../components/AddMovieModal/AddMovieModal";
-import { addMovie } from "../../services/api";
-import MovieList from "../../components/MoviesList/MovieList";
-import SearchBar from "../../components/SearchBar/SearchBar";
+import ImportMoviesFromFile from "../../components/ImportMovieFromFile/ImportMovieFromFile.jsx";
+import { addMovie } from "../../services/api.js";
+import MovieList from "../../components/MoviesList/MovieList.jsx";
+import SearchBar from "../../components/SearchBar/SearchBar.jsx";
 import s from "./Hompage.module.css";
 
 const HomePage = () => {
@@ -14,6 +15,7 @@ const HomePage = () => {
   });
 
   const [showModal, setShowModal] = useState(false);
+  const [showImportForm, setShowImportForm] = useState(false);
 
   const handleSearchResults = (results, query, searchType) => {
     setSearchInfo({
@@ -46,17 +48,30 @@ const HomePage = () => {
 
   return (
     <div className={s.wrapper}>
+      <h1 className={s.title}> Movie Collection</h1>
+
       <SearchBar initialQuery="" onSearchResults={handleSearchResults} />
 
-      <button onClick={() => setShowModal(true)} className={s.addButton}>
-        Add Movie
-      </button>
+      <div className={s.buttonGroup}>
+        <button onClick={() => setShowModal(true)} className={s.addButton}>
+          Add Movie
+        </button>
+        <button
+          onClick={() => setShowImportForm(!showImportForm)}
+          className={s.importButton}
+        >
+          {showImportForm ? "Hide Import" : "Import from File"}
+        </button>
+      </div>
+
+      {showImportForm && <ImportMoviesFromFile />}
 
       {searchInfo.isSearching && (
         <div className={s.searchInfoBox}>
           <span>
-            Search results for "{searchInfo.query}" by {searchInfo.searchType}:{" "}
-            {searchInfo.resultsCount} movies found
+            Search results for "<strong>{searchInfo.query}</strong>" by{" "}
+            <strong>{searchInfo.searchType}</strong>:{" "}
+            <strong>{searchInfo.resultsCount}</strong> movie(s) found.
           </span>
           <button onClick={handleClearSearch} className={s.clearButton}>
             Show All Movies

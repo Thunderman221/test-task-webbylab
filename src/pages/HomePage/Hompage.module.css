@@ -1,0 +1,106 @@
+.wrapper {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.addButton,
+.importButton,
+.clearButton {
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.addButton {
+  background-color: #007bff;
+  color: white;
+}
+.addButton:hover {
+  background-color: #0056b3;
+}
+
+.importButton {
+  background-color: #28a745;
+  color: white;
+}
+.importButton:hover {
+  background-color: #218838;
+}
+
+.clearButton {
+  background-color: #6c757d;
+  color: white;
+}
+.clearButton:hover {
+  background-color: #5a6268;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.searchInfoBox {
+  padding: 12px 16px;
+  background-color: #f1f1f1;
+  border-left: 5px solid #007bff;
+  border-radius: 8px;
+  margin: 24px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+}
+
+.importFormStyled {
+  margin: 20px 0;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+}
+
+/* Стилізація file input */
+.importFormStyled input[type="file"] {
+  display: block;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: white;
+  margin-top: 8px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.importFormStyled input[type="file"]::file-selector-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 10px;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.importFormStyled input[type="file"]::file-selector-button:hover {
+  background-color: #0056b3;
+}
+
+.error {
+  color: #dc3545;
+  margin: 10px 0;
+}
+
+.success {
+  color: #28a745;
+  margin: 10px 0;
+}
