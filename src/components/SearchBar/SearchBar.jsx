@@ -1,7 +1,7 @@
 import { Formik, Form, Field } from "formik";
 import { useDispatch } from "react-redux";
-import { fetchMovies } from "../../services/api";
-import { setMovies, setError, setLoading } from "../../redux/movieSlice";
+import { fetchMovies } from "../../services/api.js";
+import { setMovies, setError, setLoading } from "../../redux/movieSlice.js";
 import s from "./SearchBar.module.css";
 
 const SearchBar = ({ initialQuery = "", onSearchResults }) => {

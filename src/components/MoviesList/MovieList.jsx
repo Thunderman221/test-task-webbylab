@@ -1,31 +1,15 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
-import { fetchMovies } from "../../services/api";
+import { fetchMovies } from "../../services/api.js";
 import { setMovies, setLoading, setError } from "../../redux/movieSlice";
 import MovieCard from "../MovieCard/MovieCard";
-import Pagination from "../Pagination/Pagination";
 import s from "./MovieList.module.css";
 
 const MovieList = ({ searchInfo, refreshTrigger }) => {
   const dispatch = useDispatch();
   const { movies, loading, error } = useSelector((state) => state.movies);
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
   const [totalMovies, setTotalMovies] = useState(0);
-  const moviesPerPage = 40;
-
-  useEffect(() => {
-    if (searchInfo?.isSearching) {
-      setCurrentPage(1);
-    }
-  }, [searchInfo?.query, searchInfo?.searchType]);
-
-  useEffect(() => {
-    if (refreshTrigger > 0) {
-      setCurrentPage(1);
-    }
-  }, [refreshTrigger]);
 
   useEffect(() => {
     const loadMovies = async () => {
@@ -36,18 +20,14 @@ const MovieList = ({ searchInfo, refreshTrigger }) => {
         const data = await fetchMovies({
           sort: "title",
           order: "ASC",
-          page: currentPage,
-          limit: moviesPerPage,
+          limit: 100000,
         });
 
         const moviesList = data.movies || data.data || data;
 
         if (Array.isArray(moviesList)) {
           dispatch(setMovies(moviesList));
-
-          const total = data.total || data.totalCount || moviesList.length;
-          setTotalMovies(total);
-          setTotalPages(Math.ceil(total / moviesPerPage));
+          setTotalMovies(moviesList.length);
         } else {
           console.error("API response is not an array:", data);
           dispatch(setError("Invalid API response format"));
@@ -59,12 +39,7 @@ const MovieList = ({ searchInfo, refreshTrigger }) => {
     };
 
     loadMovies();
-  }, [dispatch, currentPage, searchInfo?.isSearching, refreshTrigger]);
-
-  const handlePageChange = (pageNumber) => {
-    if (pageNumber < 1 || pageNumber > totalPages) return;
-    setCurrentPage(pageNumber);
-  };
+  }, [dispatch, searchInfo?.isSearching, refreshTrigger]);
 
   if (loading) {
     return <div className={s.container}>Loading movies...</div>;
@@ -84,29 +59,16 @@ const MovieList = ({ searchInfo, refreshTrigger }) => {
             ? `Found ${totalMovies} movies`
             : `Total movies: ${totalMovies}`}
         </p>
-        <p>
-          Page {currentPage} of {totalPages}
-        </p>
       </div>
 
       {!movies || movies.length === 0 ? (
         <p className={s.empty}>No movies found.</p>
       ) : (
-        <>
-          <ul className={s.movieList}>
-            {movies.map((movie) => (
-              <MovieCard key={movie.id} movie={movie} />
-            ))}
-          </ul>
-
-          {totalPages > 1 && (
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-            />
-          )}
-        </>
+        <ul className={s.movieList}>
+          {movies.map((movie) => (
+            <MovieCard key={movie.id} movie={movie} />
+          ))}
+        </ul>
       )}
     </div>
   );

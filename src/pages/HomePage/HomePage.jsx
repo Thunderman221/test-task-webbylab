@@ -1,8 +1,8 @@
 import { useState } from "react";
 import AddMovieModal from "../../components/AddMovieModal/AddMovieModal";
-import { addMovie } from "../../services/api";
-import MovieList from "../../components/MoviesList/MovieList";
-import SearchBar from "../../components/SearchBar/SearchBar";
+import { addMovie } from "../../services/api.js";
+import MovieList from "../../components/MoviesList/MovieList.jsx";
+import SearchBar from "../../components/SearchBar/SearchBar.jsx";
 import s from "./Hompage.module.css";
 
 const HomePage = () => {
