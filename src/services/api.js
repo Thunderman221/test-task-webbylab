@@ -76,7 +76,7 @@ export const deleteMovie = async (id) => {
 
 export const searchMoviesByTitle = async (title) => {
   try {
-    const response = await axios.get(`${apiURL}/movies`, {
+    const response = await axios.get(`${apiURL}`, {
       params: { title },
       headers: {
         Authorization: apiKey,
@@ -94,7 +94,7 @@ export const searchMoviesByActor = async (actor) => {
     const response = await axios.get(`${apiURL}/movies`, {
       params: { actor },
       headers: {
-        Authorization: `Bearer ${apiKey}`,
+        Authorization: apiKey,
       },
     });
     return response.data;
@@ -104,16 +104,26 @@ export const searchMoviesByActor = async (actor) => {
   }
 };
 
-export const importMovies = async (movies) => {
+export const importMovies = async (file) => {
   try {
-    const response = await axios.post(`${apiURL}/import`, movies, {
+    const formData = new FormData();
+    formData.append("movies", file);
+
+    const response = await axios.post(`${apiURL}/import`, formData, {
       headers: {
         Authorization: apiKey,
+        "Content-Type": "multipart/form-data",
       },
     });
-    return response.data;
+    console.log("RESPONSE DATA:", response.data);
+    return response.data.data || [];
   } catch (error) {
-    console.error("Error importing movies:", error);
-    throw error;
+    console.error("Import:", {
+      status: error.response?.status,
+      data: error.response?.data,
+      message: error.message,
+    });
+
+    throw new Error(error.response?.data?.message || "Import failed");
   }
 };
