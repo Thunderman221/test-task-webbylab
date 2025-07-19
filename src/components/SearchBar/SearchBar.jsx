@@ -21,7 +21,6 @@ const SearchBar = ({ initialQuery = "", onSearchResults }) => {
 
       let data;
       if (searchType === "title") {
-        // Пошук за назвою фільму
         data = await fetchMovies({
           title: trimmedQuery,
           sort: "title",
@@ -30,7 +29,6 @@ const SearchBar = ({ initialQuery = "", onSearchResults }) => {
           limit: 20,
         });
       } else if (searchType === "actor") {
-        // Пошук за ім'ям актора
         data = await fetchMovies({
           actor: trimmedQuery,
           sort: "title",
@@ -39,7 +37,6 @@ const SearchBar = ({ initialQuery = "", onSearchResults }) => {
           limit: 20,
         });
       } else {
-        // Комбінований пошук
         data = await fetchMovies({
           search: trimmedQuery,
           sort: "title",
@@ -51,13 +48,11 @@ const SearchBar = ({ initialQuery = "", onSearchResults }) => {
 
       console.log("Search results:", data);
 
-      // Перевірте структуру відповіді API
       const moviesList = data.movies || data.data || data;
 
       if (Array.isArray(moviesList)) {
         dispatch(setMovies(moviesList));
 
-        // Викликати callback якщо є
         if (onSearchResults) {
           onSearchResults(moviesList, trimmedQuery, searchType);
         }
@@ -76,7 +71,6 @@ const SearchBar = ({ initialQuery = "", onSearchResults }) => {
   };
 
   const handleClear = () => {
-    // Очистити пошук і завантажити всі фільми
     dispatch(setLoading());
     fetchMovies({
       sort: "title",

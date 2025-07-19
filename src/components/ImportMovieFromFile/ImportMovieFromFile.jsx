@@ -1,59 +1,58 @@
 import { useState } from "react";
-import { importMovies } from "../../services/api.js";
 import { useDispatch } from "react-redux";
+import { importMovies } from "../../services/api.js";
 import { addMovie } from "../../redux/movieSlice.js";
 import s from "./ImportMovieFromFile.module.css";
 
 const ImportMoviesFromFile = () => {
   const [file, setFile] = useState(null);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [message, setMessage] = useState({ type: "", text: "" });
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
 
+  const resetMessages = () => setMessage({ type: "", text: "" });
+
+  const validateFile = (file) => {
+    if (!file) return "Please select a file to import";
+    if (file.type !== "text/plain") return "Supported file type is .txt only";
+    return null;
+  };
+
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
-    if (selectedFile) {
-      setFile(selectedFile);
-      setError("");
-      setSuccess("");
-    }
+    setFile(selectedFile);
+    resetMessages();
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
-    setSuccess("");
+    resetMessages();
 
-    if (!file) {
-      setError("Please select a file to import");
-      return;
-    }
-
-    if (file.type !== "text/plain") {
-      setError("Supported file type is .txt only");
+    const error = validateFile(file);
+    if (error) {
+      setMessage({ type: "error", text: error });
       return;
     }
 
     setIsLoading(true);
-
     try {
       const importedMovies = await importMovies(file);
-
       importedMovies.forEach((movie) => dispatch(addMovie(movie)));
 
-      setSuccess(
-        `The movies is imported ${importedMovies.length} successfully!`
-      );
+      setMessage({
+        type: "success",
+        text: `Imported ${importedMovies.length} movie(s) successfully!`,
+      });
+
       setFile(null);
 
-      // Оновлюємо сторінку через 2 секунди після успішного імпорту
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
+      setTimeout(() => window.location.reload(), 2000);
     } catch (err) {
       console.error("Import error:", err);
-      setError(err.message || "Failed to import movies");
+      setMessage({
+        type: "error",
+        text: err.message || "Failed to import movies",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -78,8 +77,11 @@ const ImportMoviesFromFile = () => {
           </label>
         </div>
 
-        {error && <div className={s.error}>{error}</div>}
-        {success && <div className={s.success}>{success}</div>}
+        {message.text && (
+          <div className={message.type === "error" ? s.error : s.success}>
+            {message.text}
+          </div>
+        )}
 
         <button
           type="submit"
